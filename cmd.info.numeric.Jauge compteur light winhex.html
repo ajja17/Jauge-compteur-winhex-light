@@ -1,0 +1,193 @@
+<!-- 
+Modifications : 
+-
+Mise à jour :
+- Le 2019/04/06	: conteneur github https://github.com/ajja17
+- Le 2018/02/08 : Création
+-->
+<div style="min-width:115px;min-height:100px;position: relative; top : -7px;padding:0px !important;" class="container-fluid cmd cmd-widget" data-type="info" data-subtype="numeric" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#"  >
+	<div style="width:115px;height : 90px;" class="gauge cursor"></div>
+	<span style="#displayHistory#" class="col-xs-12 center-block cmdStats"></span>
+      	<span class="timeCmd#uid# center-block" style="text-align: center;font-size:12px;padding : 3px;border-radius: 4px;"></span>
+<script>
+  //    couleur(black) = "white,gray,gray,gray,#999999,white,#ccd6eb,#006ca9,gray,#fff,#006CA9,red";
+  //    couleur(default) = "white,WhiteSmoke,WhiteSmoke,WhiteSmoke,WhiteSmoke,WhiteSmoke,WhiteSmoke,green,gray,WhiteSmoke,#006CA9,red";  
+
+testdecimal = ("#decimal#" == '#'+'decimal#');
+	if (testdecimal == true) {
+		var dec#id# = parseFloat(1);
+	} else { 
+		var dec#id# = parseFloat('#decimal#');
+    }    
+
+min_max = ("#min_max#" == '#'+'min_max#');
+	if (min_max == true) {
+		var mini#id# = #minValue#;
+		var max#id# = #maxValue#;
+	} else { 
+  		var min_max = '#min_max#' ;
+        var min_max_liste = min_max.split(",");
+		var mini#id# = parseFloat(min_max_liste[0]);
+		var max#id# = parseFloat(min_max_liste[1]);
+	}
+
+testinterval = ("#interval#" == '#'+'interval#');
+	if (testinterval == true) {
+		var tick_Interval#id# = Math.abs(Math.round(((#minValue# - #maxValue# )+1)/3)) ;
+	} else { 
+  		var tick_Interval#id# = '#interval#';
+	}
+
+testcolor = ("#couleur#" == '#'+'couleur#');
+	if (testcolor == true) {
+		var couleur = "white,WhiteSmoke,WhiteSmoke,WhiteSmoke,WhiteSmoke,WhiteSmoke,WhiteSmoke"; 
+	} else { 
+  		var couleur = '#couleur#' ;
+    }
+
+var couleurListe = couleur.split(",");
+
+var color_value#id# = (couleurListe[0]) ; 
+var color_unite#id# = (couleurListe[1]) ; 
+var color_time#id# = (couleurListe[2]) ;
+var color_tickColor#id# = (couleurListe[3]) ; 
+var color_minorTick#id# = (couleurListe[4]) ;
+var color_tick_label_Color#id# = (couleurListe[5]) ; 
+var color_line#id# = (couleurListe[6]) ;
+
+testcolors = ("#couleur_jauge#" == '#'+'couleur_jauge#');
+	if (testcolors == true) {
+		var couleurs = "Cyan,green,yellow,orange,OrangeRed"; 
+	} else { 
+  		var couleurs = '#couleur_jauge#' ;
+    }
+
+var couleursListe = couleurs.split(",");
+
+var color_A#id# = (couleursListe[0]) ; 
+var color_B#id# = (couleursListe[1]) ; 
+var color_C#id# = (couleursListe[2]) ;
+var color_D#id# = (couleursListe[3]) ; 
+var color_E#id# = (couleursListe[4]) ;
+
+$('.timeCmd#uid#').css('color', color_time#id#);
+
+      // actualisation
+jeedom.cmd.update['#id#'] = function(_options){
+
+        jeedom.cmd.displayDuration(_options.valueDate,  $('.cmd[data-cmd_id=#id#] .timeCmd#uid#'));
+      	$('.cmd[data-cmd_uid=#uid#] .gauge').highcharts().series[0].points[0].update(_options.display_value);
+          
+    }
+ 
+ if (is_numeric('#state#')) {
+   jeedom.cmd.displayDuration('#valueDate#', $('.timeCmd#uid#'));
+
+ var valueDate#id# = '#valueDate#';
+
+	$('.cmd[data-cmd_uid=#uid#] .gauge').empty().highcharts({
+	chart: {
+                events: {
+                    click: function (event) {
+                        if (!$.mobile && '#history#' == 'history cursor') {
+                            $('#md_modal2').dialog({title: "Historique"});
+                            $("#md_modal2").load('index.php?v=d&modal=cmd.history&id=#id#').dialog('open');
+                        }
+                    }
+                },
+		type: 'solidgauge',
+
+		backgroundColor: null,
+                height : 105,
+                plotBackgroundColor: null,
+                plotBackgroundImage: null,
+                backgroundColor: null,
+            },
+          
+	title: null,
+	pane: {
+		center: ['35%', '110%'],
+		size: '140%',
+		startAngle: -30,
+		endAngle: 90,
+		background: {
+			innerRadius: '',
+			outerRadius: '',
+			shape: 'arc'
+					}
+		},
+	yAxis: {
+		stops: [ 
+			[0.15, color_A#id# ],
+			[0.35, color_B#id# ],
+			[0.55, color_C#id# ],
+			[0.75, color_D#id# ],
+			[0.95, color_E#id# ],
+
+				],
+		lineWidth: 1,
+      	lineColor: color_line#id# ,
+		minorTickLength: 5,
+		minorTickInterval: 'auto',
+      	minorTickColor: color_minorTick#id#,
+		tickWidth: 2,
+		tickColor: color_tickColor#id# , // color bar deg
+		labels: {
+          	className: 'compteur',
+			style: {color: color_tick_label_Color#id#,
+      				fontSize:'8px'},
+			enabled: true,
+			distance: 3,
+			useHTML: true,
+			rotation: 'auto',
+       			},
+                                                            
+                    min: mini#id#,
+                    max: max#id#,
+                                                            
+                                                            
+		tickInterval: [tick_Interval#id#], //3
+                          title: {
+                        text: '<span style="color:'+color_value#id#+';font-weight: bold;font-family : Helvetica Neue,Helvetica,Arial,sans-serif;#hideCmdName#">#name_display#</span>',
+                        y: - 48,
+      					x: 15,
+                    }
+	},	
+		plotOptions: {
+		series: {
+			dataLabels: {
+				formatter: function () {
+					return '<span style="color:'+color_value#id#+';font-size:24px;font-family : Roboto-Light,Helvetica Neue,Arial,sans-serif;">' 
+                      + this.point.y.toFixed(dec#id#) + '<span style="color:'+color_unite#id#+';font-size:10px;"> #unite#</span>' ;
+ },  
+				style: {textOutline: '2'},
+				x: 5,
+				y: 13,
+				borderWidth: 0, 
+				}
+			},       
+		},
+	credits: {enabled: false},
+	exporting : {enabled: false},
+            tooltip: {
+                enabled: false
+            },
+
+	series: [{
+		name: '#name_display#',
+		 data: [Math.round(parseFloat('#state#') * 10) / 10],
+		radius: '95%',
+		innerRadius: '80%',
+		},
+           ],   
+
+     exporting: { enabled: false },
+
+});
+   } else {
+       $('.cmd[data-cmd_uid=#uid#] .gauge').append('<center><span class="label label-danger" style="margin-top : 5px;">#state#</span></center>');
+   }
+
+</script>
+
+</div>
